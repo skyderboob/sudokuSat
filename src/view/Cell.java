@@ -5,12 +5,15 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 /**
  * This class represents a field on the SudokuPanel.
- *
+ * 
  * @author Eric Beijer
  */
 public class Cell extends JTextField {
@@ -18,53 +21,96 @@ public class Cell extends JTextField {
      * 
      */
     private static final long serialVersionUID = 1L;
-    private int x;      // X position in game.
-    private int y;      // Y position in game.
+    private int x; // X position in game.
+    private int y; // Y position in game.
 
-    /**
-     * Constructs the label and sets x and y positions in game.
-     *
-     * @param x     X position in game.
-     * @param y     Y position in game.
+    /***
+     * Contructor khởi tạo ô
+     * @param x
+     * @param y
+     * @param size kích thước của sudoku
      */
-    public Cell(int x, int y) {
-        super("", CENTER);
-        this.x = x;
-        this.y = y;
-        
-        
-        setPreferredSize(new Dimension(30, 30));
-        setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        setFont(new Font(Font.DIALOG, Font.PLAIN, 20));
-        setOpaque(true);
+    public Cell(int x, int y, int size) {
+	super("", CENTER);
+	this.x = x;
+	this.y = y;
+
+	((AbstractDocument) getDocument()).setDocumentFilter(new NumberOnlyFilter(size));
+	setHorizontalAlignment(JTextField.CENTER);
+	setPreferredSize(new Dimension(30, 30));
+	setBorder(BorderFactory.createLineBorder(Color.GRAY));
+	setFont(new Font(Font.DIALOG, Font.PLAIN, 20));
+	setOpaque(true);
     }
 
     /**
      * Sets number and foreground color according to userInput.
-     *
-     * @param number        Number to be set.
-     * @param userInput     Boolean indicating number is user input or not.
+     * 
+     * @param number
+     *            Number to be set.
+     * @param userInput
+     *            Boolean indicating number is user input or not.
      */
     public void setNumber(int number, boolean userInput) {
-        setForeground(userInput ? Color.BLUE : Color.BLACK);
-        setText(number > 0 ? number + "" : "");
+	setForeground(userInput ? Color.BLUE : Color.BLACK);
+	setText(number > 0 ? number + "" : "");
     }
 
     /**
      * Returns x position in game.
-     *
-     * @return  X position in game.
+     * 
+     * @return X position in game.
      */
     public int getFieldX() {
-        return x;
+	return x;
     }
 
     /**
      * Return y position in game.
-     *
-     * @return  Y position in game.
+     * 
+     * @return Y position in game.
      */
     public int getFieldY() {
-        return y;
+	return y;
+    }
+
+    public class NumberOnlyFilter extends DocumentFilter {
+	public int maxNumber;
+
+	public NumberOnlyFilter(int size) {
+	    maxNumber = size * size;
+	}
+
+	public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+		throws BadLocationException {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+	    sb.insert(offset, text);
+	    if (!containsOnlyNumbers(sb.toString()))
+		return;
+	    fb.insertString(offset, text, attr);
+	}
+
+	public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attr)
+		throws BadLocationException {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+	    sb.replace(offset, offset + length, text);
+	    if (!containsOnlyNumbers(sb.toString()))
+		return;
+	    fb.replace(offset, length, text, attr);
+	}
+
+	/**
+	 * Tùy vào kích thước của sudoku mà ô sẽ chỉ giới hạn cho nhập số phù hợp
+	 */
+	public boolean containsOnlyNumbers(String text) {
+	    boolean isNumber = text.matches("[0-9]([0-9])?");
+	    if (isNumber) {
+		int value = Integer.parseInt(text);
+		return ((value > 0) && (value <= maxNumber)) ? true : false;
+	    } else
+		return false;
+	}
     }
 }

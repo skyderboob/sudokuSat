@@ -34,19 +34,19 @@ public class Sudoku extends JFrame {
 	sudoku.pack();
     }
     
-    public Sudoku() {
+    public Sudoku(int size) {
         super("Sudoku");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
 
-        game = new Game(3);
+        game = new Game(size);
 
         buttonController = new ButtonController(game);
         buttonPanel = new ButtonPanel();
         buttonPanel.setController(buttonController);
         add(buttonPanel, BorderLayout.EAST);
 
-        sudokuPanel = new SudokuPanel(3);
+        sudokuPanel = new SudokuPanel(size);
         sudokuController = new SudokuController(sudokuPanel, game);
         sudokuPanel.setController(sudokuController);
         add(sudokuPanel, BorderLayout.CENTER);
@@ -68,6 +68,6 @@ public class Sudoku extends JFrame {
         // Use System Look and Feel
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
         catch (Exception ex) { ex.printStackTrace(); }
-        sudoku = new Sudoku();
+        sudoku = new Sudoku(3);
     }
 }

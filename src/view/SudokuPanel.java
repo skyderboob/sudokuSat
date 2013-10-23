@@ -46,7 +46,7 @@ public class SudokuPanel extends JPanel implements Observer {
         cells = new Cell[gameSize][gameSize];
         for (int y = 0; y < gameSize; y++) {
             for (int x = 0; x < gameSize; x++) {
-                cells[y][x] = new Cell(x, y);
+                cells[y][x] = new Cell(x, y, size);
                 table[y / size][x / size].add(cells[y][x]);
             }
         }

@@ -21,19 +21,20 @@ public class Cell extends JTextField {
      * 
      */
     private static final long serialVersionUID = 1L;
-    private int x; // X position in game.
-    private int y; // Y position in game.
+    private int row;
+    private int col;
+    public boolean hasChanged = false;
 
     /***
      * Contructor khởi tạo ô
-     * @param x
-     * @param y
+     * @param row
+     * @param col
      * @param size kích thước của sudoku
      */
-    public Cell(int x, int y, int size) {
+    public Cell(int row, int col, int size) {
 	super("", CENTER);
-	this.x = x;
-	this.y = y;
+	this.row = row;
+	this.col = col;
 
 	((AbstractDocument) getDocument()).setDocumentFilter(new NumberOnlyFilter(size));
 	setHorizontalAlignment(JTextField.CENTER);
@@ -56,22 +57,12 @@ public class Cell extends JTextField {
 	setText(number > 0 ? number + "" : "");
     }
 
-    /**
-     * Returns x position in game.
-     * 
-     * @return X position in game.
-     */
-    public int getFieldX() {
-	return x;
+    public int getRow() {
+	return row;
     }
 
-    /**
-     * Return y position in game.
-     * 
-     * @return Y position in game.
-     */
-    public int getFieldY() {
-	return y;
+    public int getColumn() {
+	return col;
     }
 
     public class NumberOnlyFilter extends DocumentFilter {
@@ -89,6 +80,7 @@ public class Cell extends JTextField {
 	    if (!containsOnlyNumbers(sb.toString()))
 		return;
 	    fb.insertString(offset, text, attr);
+	    hasChanged = true;
 	}
 
 	public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attr)
@@ -99,6 +91,7 @@ public class Cell extends JTextField {
 	    if (!containsOnlyNumbers(sb.toString()))
 		return;
 	    fb.replace(offset, length, text, attr);
+	    hasChanged = true;
 	}
 
 	/**

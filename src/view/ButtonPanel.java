@@ -1,24 +1,19 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.util.Enumeration;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 
-import controller.ButtonController;
 import model.UpdateAction;
+import controller.ButtonController;
 
 /**
  * This class draws the button panel and reacts to updates from the model.
@@ -33,7 +28,6 @@ public class ButtonPanel extends JPanel implements Observer {
     JButton btnNew, btnSolve, btnCheck, btnExit;   // Used buttons.
     JButton btnSize3, btnSize4, btnSize5;
     JCheckBox cbHelp;               // Used check box.
-    ButtonGroup bgNumbers;          // Group for grouping the toggle buttons.
     JToggleButton[] btnNumbers;     // Used toggle buttons.
 
     /**
@@ -93,7 +87,6 @@ public class ButtonPanel extends JPanel implements Observer {
         switch ((UpdateAction)arg) {
             case NEW_GAME:
             case CHECK:
-                bgNumbers.clearSelection();
                 break;
 	default:
 	    break;

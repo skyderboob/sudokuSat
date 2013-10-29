@@ -13,6 +13,7 @@ public class Game extends Observable {
     private int gameSize;
     private int blockSize;
     private int[][] game; // Generated game with user input.
+    private int selectedNumber;     // Selected number by user.
 
     /**
      * Constructor
@@ -24,6 +25,9 @@ public class Game extends Observable {
     }
 
     public void newGame(int size) {
+	blockSize = size;
+	gameSize = blockSize * blockSize;
+	game = new int[gameSize][gameSize];
         setChanged();
         notifyObservers(UpdateAction.NEW_GAME);
     }
@@ -33,8 +37,24 @@ public class Game extends Observable {
     }
     
     
-    public static void main(String[] args) {
-	Game test = new Game(2);
+    /**
+     * Returns number selected user.
+     *
+     * @return  Number selected by user.
+     */
+    public int getSelectedNumber() {
+        return selectedNumber;
     }
-
+    
+    /**
+     * Sets given number on given position in the game.
+     *
+     * @param x         The x position in the game.
+     * @param y         The y position in the game.
+     * @param number    The number to be set.
+     */
+    public void setNumber(int x, int y, int number) {
+        game[y][x] = number;
+        hasChanged();
+    }
 }

@@ -8,6 +8,7 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import model.Game;
 import model.UpdateAction;
 import controller.SudokuController;
 
@@ -26,7 +27,7 @@ public class SudokuPanel extends JPanel implements Observer {
     private Cell[][] cells;       // Array of cells.
     private JPanel[][] table;      // Panels holding the cells.
     
-    /**
+    /** 
      * Constructs the panel, adds sub panels and adds fields to these sub panels.
      */
     public SudokuPanel(int size) {
@@ -34,20 +35,22 @@ public class SudokuPanel extends JPanel implements Observer {
         panelSize = size;
 
         table = new JPanel[size][size];
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                table[y][x] = new JPanel(new GridLayout(size, size));
-                table[y][x].setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-                add(table[y][x]);
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+        	 table[r][c] = new JPanel(new GridLayout(size, size));
+                 table[r][c].setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+                 add(table[r][c]);
             }
+            
         }
 
         int gameSize = size * size;
         cells = new Cell[gameSize][gameSize];
-        for (int y = 0; y < gameSize; y++) {
-            for (int x = 0; x < gameSize; x++) {
-                cells[y][x] = new Cell(x, y, size);
-                table[y / size][x / size].add(cells[y][x]);
+
+        for (int r = 0; r < gameSize; r++) {
+            for (int c = 0; c < gameSize; c++) {
+                cells[r][c] = new Cell(r, c, size);
+                table[r / size][c / size].add(cells[r][c]);
             }
         }
     }
@@ -61,7 +64,7 @@ public class SudokuPanel extends JPanel implements Observer {
     public void update(Observable o, Object arg) {
         switch ((UpdateAction)arg) {
             case NEW_GAME:
-                //setGame((Game)o);
+                setGame((Game)o);
                 break;
             case CHECK:
                 break;
@@ -77,14 +80,15 @@ public class SudokuPanel extends JPanel implements Observer {
      *
      * @param game  Game to be set.
      */
-//    public void setGame(Game game) {
-//        for (int y = 0; y < 9; y++) {
-//            for (int x = 0; x < 9; x++) {
-//                cells[y][x].setBackground(Color.WHITE);
-//                cells[y][x].setNumber(game.getNumber(x, y), false);
-//            }
-//        }
-//    }
+    public void setGame(Game game) {
+	int gameSize = panelSize * panelSize;
+        for (int r = 0; r < gameSize; r++) {
+            for (int c = 0; c < gameSize; c++) {
+                cells[r][c].setBackground(Color.WHITE);
+                cells[r][c].setNumber(game.getNumber(r, c), false);
+            }
+        }
+    }
 
 
     /**
@@ -93,9 +97,9 @@ public class SudokuPanel extends JPanel implements Observer {
      * @param sudokuController  Controller which controls all user actions.
      */
     public void setController(SudokuController sudokuController) {
-        for (int y = 0; y < panelSize; y++) {
-            for (int x = 0; x < panelSize; x++)
-                table[y][x].addMouseListener(sudokuController);
+        for (int r = 0; r < panelSize; r++) {
+            for (int c = 0; c < panelSize; c++)
+                table[r][c].addMouseListener(sudokuController);
         }
     }
 }

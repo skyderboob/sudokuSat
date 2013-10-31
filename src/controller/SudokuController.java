@@ -5,7 +5,7 @@ import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JPanel;
-import model.Game;
+import model.Puzzle;
 import model.UpdateAction;
 import view.Cell;
 import view.SudokuPanel;
@@ -17,7 +17,7 @@ import view.SudokuPanel;
  */
 public class SudokuController implements MouseListener {
     private SudokuPanel sudokuPanel; // Panel to control.
-    private Game game; // Current Sudoku game.
+    private Puzzle game; // Current Sudoku game.
 
     /**
      * Constructor, sets game.
@@ -25,7 +25,7 @@ public class SudokuController implements MouseListener {
      * @param game
      *            Game to be set.
      */
-    public SudokuController(SudokuPanel sudokuPanel, Game game) {
+    public SudokuController(SudokuPanel sudokuPanel, Puzzle game) {
 	this.sudokuPanel = sudokuPanel;
 	this.game = game;
 	sudokuPanel.setGame(game);

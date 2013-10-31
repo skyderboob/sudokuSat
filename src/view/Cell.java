@@ -55,6 +55,7 @@ public class Cell extends JTextField {
     public void setNumber(int number, boolean userInput) {
 	setForeground(userInput ? Color.BLUE : Color.BLACK);
 	setText(number > 0 ? number + "" : "");
+	setEditable(userInput ? true : false);
     }
 
     public int getRow() {

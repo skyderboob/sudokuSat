@@ -2,8 +2,9 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
-import model.Game;
+import model.Puzzle;
 import view.Sudoku;
 
 /**
@@ -12,17 +13,17 @@ import view.Sudoku;
  * @author Eric Beijer
  */
 public class ButtonController implements ActionListener {
-    private Game game;
+    private Puzzle puzzle;
     private int gameSize = 3;
 
     /**
      * Constructor, sets game.
      * 
-     * @param game
+     * @param puzzle
      *            Game to be set.
      */
-    public ButtonController(Game game) {
-	this.game = game;
+    public ButtonController(Puzzle puzzle) {
+	this.puzzle = puzzle;
     }
 
     /**
@@ -33,9 +34,14 @@ public class ButtonController implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
 	if (e.getActionCommand().equals("New"))
-	    System.out.println(game.getNumber(1, 1));
+	    System.out.println(puzzle.getNumber(1, 1));
 	else if (e.getActionCommand().equals("Solve"))
-	    System.out.println("Solve clicked");
+	    try {
+		puzzle.solve();
+	    } catch (IOException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	    }
 	else if (e.getActionCommand().equals("Check"))
 	    System.out.println("Check game clicked");
 	else if (e.getActionCommand().equals("Exit"))
@@ -43,15 +49,15 @@ public class ButtonController implements ActionListener {
 	else if (e.getActionCommand().equals("Help on"))
 	    System.out.println("Help clicked");
 	else if (e.getActionCommand().equals("3x3")) {
-	    game.newGame(3);
+	    puzzle.newGame(3);
 	    Sudoku.setPanelSize(3);
 
 	} else if (e.getActionCommand().equals("4x4")) {
-	    game.newGame(4);
+	    puzzle.newGame(4);
 	    Sudoku.setPanelSize(4);
 
 	} else if (e.getActionCommand().equals("5x5")) {
-	    game.newGame(5);
+	    puzzle.newGame(5);
 	    Sudoku.setPanelSize(5);
 
 	}

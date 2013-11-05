@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
-encoding//src/model/Puzzle.java=UTF-8
+encoding//src/model/SudokuPuzzle.java=UTF-8
 encoding//src/model/SudokuRulesEncoder.java=UTF-8
 encoding//src/view/Cell.java=UTF-8

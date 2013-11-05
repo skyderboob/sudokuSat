@@ -7,9 +7,11 @@ import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 
 import model.UpdateAction;
@@ -26,10 +28,8 @@ public class ButtonPanel extends JPanel implements Observer {
      */
     private static final long serialVersionUID = 1L;
     JButton btnNew, btnSolve, btnCheck, btnExit;   // Used buttons.
-    JButton btnSize3, btnSize4, btnSize5;
-    JCheckBox cbHelp;               // Used check box.
-    JToggleButton[] btnNumbers;     // Used toggle buttons.
-
+    JRadioButton btnSize3, btnSize4, btnSize5;
+    ButtonGroup btnGroup;
     /**
      * Constructs the panel and arranges all components.
      */
@@ -64,17 +64,23 @@ public class ButtonPanel extends JPanel implements Observer {
         pnlSizes.setBorder(BorderFactory.createTitledBorder(" Game size "));
         pnlAlign.add(pnlSizes);
 
-        btnSize3 = new JButton("3x3");
+        btnSize3 = new JRadioButton("3x3");
         btnSize3.setFocusable(false);
         pnlSizes.add(btnSize3);
         
-        btnSize4 = new JButton("4x4");
+        btnSize4 = new JRadioButton("4x4");
         btnSize3.setFocusable(false);
         pnlSizes.add(btnSize4);
         
-        btnSize5 = new JButton("5x5");
+        btnSize5 = new JRadioButton("5x5");
         btnSize5.setFocusable(false);
         pnlSizes.add(btnSize5);
+        
+        btnGroup = new ButtonGroup();
+        btnGroup.add(btnSize3);
+        btnGroup.add(btnSize4);
+        btnGroup.add(btnSize5);
+        btnSize3.setSelected(true);
     }
 
     /**

@@ -57,7 +57,7 @@ public class Cell extends JTextField {
 	setText(number > 0 ? number + "" : "");
 	setEditable(userInput ? true : false);
     }
-
+    
     public int getRow() {
 	return row;
     }
@@ -70,7 +70,7 @@ public class Cell extends JTextField {
 	public int maxNumber;
 
 	public NumberOnlyFilter(int size) {
-	    maxNumber = size * size;
+	    maxNumber = size;
 	}
 
 	public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
@@ -99,6 +99,7 @@ public class Cell extends JTextField {
 	 * Tùy vào kích thước của sudoku mà ô sẽ chỉ giới hạn cho nhập số phù hợp
 	 */
 	public boolean containsOnlyNumbers(String text) {
+	    if (text.equals("")) return true;
 	    boolean isNumber = text.matches("[0-9]([0-9])?");
 	    if (isNumber) {
 		int value = Integer.parseInt(text);

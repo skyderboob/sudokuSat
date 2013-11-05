@@ -7,6 +7,7 @@ package model;
  */
 public enum UpdateAction {
     NEW_GAME,
+    NEW_SIZE,
     CHECK,
     SELECTED_NUMBER,
     GAME_SOLVED,

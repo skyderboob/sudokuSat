@@ -4,8 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import model.Puzzle;
-import view.Sudoku;
+import model.SudokuPuzzle;
 
 /**
  * This class controls all user actions from ButtonPanel.
@@ -13,8 +12,8 @@ import view.Sudoku;
  * @author Eric Beijer
  */
 public class ButtonController implements ActionListener {
-    private Puzzle puzzle;
-    private int gameSize = 3;
+    private SudokuPuzzle puzzle;
+    private int gameSize = 9;
 
     /**
      * Constructor, sets game.
@@ -22,7 +21,7 @@ public class ButtonController implements ActionListener {
      * @param puzzle
      *            Game to be set.
      */
-    public ButtonController(Puzzle puzzle) {
+    public ButtonController(SudokuPuzzle puzzle) {
 	this.puzzle = puzzle;
     }
 
@@ -34,7 +33,7 @@ public class ButtonController implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
 	if (e.getActionCommand().equals("New"))
-	    System.out.println(puzzle.getNumber(1, 1));
+	    puzzle.newGame(gameSize);
 	else if (e.getActionCommand().equals("Solve"))
 	    try {
 		puzzle.solve();
@@ -49,22 +48,12 @@ public class ButtonController implements ActionListener {
 	else if (e.getActionCommand().equals("Help on"))
 	    System.out.println("Help clicked");
 	else if (e.getActionCommand().equals("3x3")) {
-	    puzzle.newGame(3);
-	    Sudoku.setPanelSize(3);
-
+	    gameSize = 9;
 	} else if (e.getActionCommand().equals("4x4")) {
-	    puzzle.newGame(4);
-	    Sudoku.setPanelSize(4);
-
+	    gameSize = 16;
 	} else if (e.getActionCommand().equals("5x5")) {
-	    puzzle.newGame(5);
-	    Sudoku.setPanelSize(5);
-
+	    gameSize = 25;
 	}
 
-    }
-
-    public void newGameButtonHandler() {
-	Sudoku.setPanelSize(gameSize);
     }
 }

@@ -8,7 +8,7 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import model.Puzzle;
+import model.SudokuPuzzle;
 import model.UpdateAction;
 import controller.SudokuController;
 
@@ -23,7 +23,7 @@ public class SudokuPanel extends JPanel implements Observer {
      */
     private static final long serialVersionUID = 1L;
 
-    private int panelSize;
+    private int puzzleSize;
     private Cell[][] cells; // Array of cells.
     private JPanel[][] table; // Panels holding the cells.
 
@@ -31,30 +31,31 @@ public class SudokuPanel extends JPanel implements Observer {
      * Constructs the panel, adds sub panels and adds fields to these sub panels.
      */
     public SudokuPanel(int size) {
-	super(new GridLayout(size, size));
-	panelSize = size;
 
-	table = new JPanel[size][size];
-	for (int r = 0; r < size; r++) {
-	    for (int c = 0; c < size; c++) {
-		table[r][c] = new JPanel(new GridLayout(size, size));
+	super(new GridLayout((int) Math.sqrt(size), (int) Math.sqrt(size)));
+	int blockSize = (int) Math.sqrt(size);
+	puzzleSize = size;
+
+	table = new JPanel[blockSize][blockSize];
+	for (int r = 0; r < blockSize; r++) {
+	    for (int c = 0; c < blockSize; c++) {
+		table[r][c] = new JPanel(new GridLayout(blockSize, blockSize));
 		table[r][c].setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 		add(table[r][c]);
 	    }
 
 	}
 
-	int gameSize = size * size;
-	cells = new Cell[gameSize][gameSize];
+	cells = new Cell[puzzleSize][puzzleSize];
 
-	for (int r = 0; r < gameSize; r++) {
-	    for (int c = 0; c < gameSize; c++) {
-		cells[r][c] = new Cell(r, c, size);
-		table[r / size][c / size].add(cells[r][c]);
+	for (int r = 0; r < puzzleSize; r++) {
+	    for (int c = 0; c < puzzleSize; c++) {
+		cells[r][c] = new Cell(r, c, puzzleSize);
+		table[r / blockSize][c / blockSize].add(cells[r][c]);
 	    }
 	}
     }
-
+    
     /**
      * Method called when model sends update notification.
      * 
@@ -66,12 +67,12 @@ public class SudokuPanel extends JPanel implements Observer {
     public void update(Observable o, Object arg) {
 	switch ((UpdateAction) arg) {
 	case NEW_GAME:
-	    setGame((Puzzle) o);
+	    setOriginalPuzle((SudokuPuzzle) o);
 	    break;
 	case CHECK:
 	    break;
 	case GAME_SOLVED:
-	    setGame((Puzzle) o);
+	    setSolution((SudokuPuzzle) o);
 	case HELP:
 	    break;
 	default:
@@ -82,16 +83,32 @@ public class SudokuPanel extends JPanel implements Observer {
     /**
      * Sets the fields corresponding to given game.
      * 
-     * @param game
+     * @param puzzle
      *            Game to be set.
      */
-    public void setGame(Puzzle game) {
-	int gameSize = panelSize * panelSize;
+    public void setOriginalPuzle(SudokuPuzzle puzzle) {
+	int gameSize = puzzle.getSize();
 	for (int r = 0; r < gameSize; r++) {
 	    for (int c = 0; c < gameSize; c++) {
-		int number = game.getNumber(r, c);
+		int number = puzzle.getNumber(r, c);
 		cells[r][c].setBackground(Color.WHITE);
-		cells[r][c].setNumber(number, number == 0 ? true : false);
+		cells[r][c].setNumber(number, number == 0? true : false);
+	    }
+	}
+    }
+
+    public void setSolution(SudokuPuzzle puzzle) {
+	int gameSize = puzzle.getSize();
+	int[][] puzzleTable = puzzle.getPuzzle();
+	int[][] puzzleSolution = puzzle.getSolution();
+	for (int r = 0; r < gameSize; r++) {
+	    for (int c = 0; c < gameSize; c++) {
+		cells[r][c].setBackground(Color.WHITE);
+		if (puzzleTable[r][c] == puzzleSolution[r][c]) {
+		    cells[r][c].setNumber(puzzleSolution[r][c], false);
+		} else {
+		    cells[r][c].setNumber(puzzleSolution[r][c], true);
+		}
 	    }
 	}
     }
@@ -103,8 +120,8 @@ public class SudokuPanel extends JPanel implements Observer {
      *            Controller which controls all user actions.
      */
     public void setController(SudokuController sudokuController) {
-	for (int r = 0; r < panelSize; r++) {
-	    for (int c = 0; c < panelSize; c++)
+	for (int r = 0; r < table.length; r++) {
+	    for (int c = 0; c < table[0].length; c++)
 		table[r][c].addMouseListener(sudokuController);
 	}
     }

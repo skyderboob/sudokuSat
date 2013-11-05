@@ -39,7 +39,7 @@ public class SudokuRulesEncoder {
 	currentRule.setLength(0);
     }
 
-    public void encodeAllRules() {
+    public void encodeExtendedRules() {
 	encodeCellDefinednessRules();
 	encodeCellUniquenessRules();
 	encodeRowDefinednessRules();
@@ -55,7 +55,7 @@ public class SudokuRulesEncoder {
     }
 
     public void writeToFile(String fileName) throws IOException {
-	encodeAllRules();
+	encodeExtendedRules();
 	FileWriter fw = new FileWriter(fileName);
 	fw.write("p cnf " + nVar + " " + allRules.size() + "\n");
 	for (String rule : allRules) {

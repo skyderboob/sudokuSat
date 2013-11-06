@@ -6,8 +6,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
@@ -30,16 +28,16 @@ public class Sudoku extends JFrame implements Observer {
     ButtonController buttonController;
     ButtonPanel buttonPanel;
     SudokuController sudokuController;
-    JMenuBar menuBar;
     JTextArea minisatResult;
     SudokuPuzzle puzzle;
     static Sudoku sudoku;
 
-    public static void setPanelSize(int size) {
-	sudoku.sudokuPanel = new SudokuPanel(size);
-	sudoku.sudokuPanel.setOriginalPuzle(sudoku.puzzle);
-
-	sudoku.pack();
+    public void setPanelSize(int size) {
+	remove(sudokuPanel);
+	sudokuPanel = new SudokuPanel(size);
+	sudokuController.setSudokuPanel(sudokuPanel);
+	add(sudokuPanel);
+	pack();
     }
 
     public Sudoku(int size) throws IOException {
@@ -56,43 +54,27 @@ public class Sudoku extends JFrame implements Observer {
 	buttonPanel.setController(buttonController);
 	add(buttonPanel, BorderLayout.EAST);
 
-
-	//add(minisatResult, BorderLayout.SOUTH);
-	
-	menuBar = new JMenuBar();
-	JMenu menu = new JMenu("A Menu");
-	menuBar.add(menu);
-	add(menuBar, BorderLayout.NORTH);
-
 	sudokuPanel = new SudokuPanel(size);
 	sudokuController = new SudokuController(sudokuPanel, puzzle);
-	sudokuPanel.setController(sudokuController);
 	add(sudokuPanel, BorderLayout.CENTER);
 
-	puzzle.addObserver(buttonPanel);
-	puzzle.addObserver(sudokuPanel);
+	puzzle.addObserver(sudokuController);
 	puzzle.addObserver(this);
-	
+
 	pack();
 	setLocationRelativeTo(null);
 	setVisible(true);
     }
 
-    /**
-     * Main entry point of program.
-     * 
-     * @param args
-     *            Command line arguments.
-     * @throws IOException
-     */
     public static void main(String[] args) throws IOException {
 	// Use System Look and Feel
 	try {
 	    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	    sudoku = new Sudoku(9);
 	} catch (Exception ex) {
 	    ex.printStackTrace();
 	}
-	sudoku = new Sudoku(9);
+
     }
 
     @Override
@@ -100,9 +82,8 @@ public class Sudoku extends JFrame implements Observer {
 	// TODO Auto-generated method stub
 	switch ((UpdateAction) arg) {
 	case NEW_GAME:
-//	    getContentPane().remove(2);
-//	    add(sudokuPanel, 2);
-//	    pack();
+	    SudokuPuzzle sp = (SudokuPuzzle) o;
+	    setPanelSize(sp.getSize());
 	    break;
 	case GAME_SOLVED:
 	    minisatResult.setText(puzzle.getMiniSatResult());

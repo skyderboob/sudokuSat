@@ -1,20 +1,18 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.Enumeration;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JToggleButton;
 
-import model.UpdateAction;
 import controller.ButtonController;
 
 /**
@@ -22,12 +20,12 @@ import controller.ButtonController;
  *
  * @author Eric Beijer
  */
-public class ButtonPanel extends JPanel implements Observer {
+public class ButtonPanel extends JPanel {
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
-    JButton btnNew, btnSolve, btnCheck, btnExit;   // Used buttons.
+    JButton btnNew, btnSolve, btnCheck, btnExit, btnImport;
     JRadioButton btnSize3, btnSize4, btnSize5;
     ButtonGroup btnGroup;
     /**
@@ -63,7 +61,15 @@ public class ButtonPanel extends JPanel implements Observer {
         JPanel pnlSizes = new JPanel(new FlowLayout(FlowLayout.LEADING));
         pnlSizes.setBorder(BorderFactory.createTitledBorder(" Game size "));
         pnlAlign.add(pnlSizes);
-
+        
+        JPanel pnlFile = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        pnlFile.setBorder(BorderFactory.createTitledBorder(" File "));
+        pnlAlign.add(pnlFile);
+        
+        btnImport = new JButton("Import");
+        btnImport.setFocusable(false);
+        pnlFile.add(btnImport);
+        
         btnSize3 = new JRadioButton("3x3");
         btnSize3.setFocusable(false);
         pnlSizes.add(btnSize3);
@@ -84,24 +90,6 @@ public class ButtonPanel extends JPanel implements Observer {
     }
 
     /**
-     * Method called when model sends update notification.
-     *
-     * @param o     The model.
-     * @param arg   The UpdateAction.
-     */
-    public void update(Observable o, Object arg) {
-        switch ((UpdateAction)arg) {
-            case NEW_GAME:
-            case CHECK:
-                break;
-	default:
-	    break;
-        }
-    }
-    
-    
-
-    /**
      * Adds controller to all components.
      *
      * @param buttonController  Controller which controls all user actions.
@@ -111,8 +99,10 @@ public class ButtonPanel extends JPanel implements Observer {
         btnSolve.addActionListener(buttonController);
         btnCheck.addActionListener(buttonController);
         btnExit.addActionListener(buttonController);
-        btnSize3.addActionListener(buttonController);
-        btnSize4.addActionListener(buttonController);
-        btnSize5.addActionListener(buttonController);
+        btnImport.addActionListener(buttonController);
+        for (Enumeration<AbstractButton> buttons = btnGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+            button.addActionListener(buttonController);
+        }
     }
 }

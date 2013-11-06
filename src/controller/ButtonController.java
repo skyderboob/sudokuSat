@@ -2,8 +2,14 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
+import javax.swing.JFileChooser;
+
+import view.Sudoku;
 import model.SudokuPuzzle;
 
 /**
@@ -14,6 +20,7 @@ import model.SudokuPuzzle;
 public class ButtonController implements ActionListener {
     private SudokuPuzzle puzzle;
     private int gameSize = 9;
+    final JFileChooser fc = new JFileChooser();
 
     /**
      * Constructor, sets game.
@@ -23,6 +30,7 @@ public class ButtonController implements ActionListener {
      */
     public ButtonController(SudokuPuzzle puzzle) {
 	this.puzzle = puzzle;
+	fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
     }
 
     /**
@@ -32,27 +40,32 @@ public class ButtonController implements ActionListener {
      *            ActionEvent.
      */
     public void actionPerformed(ActionEvent e) {
-	if (e.getActionCommand().equals("New"))
-	    puzzle.newGame(gameSize);
-	else if (e.getActionCommand().equals("Solve"))
-	    try {
-		puzzle.solve();
-	    } catch (IOException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
+	try {
+	    if (e.getActionCommand().equals("New"))
+		puzzle.newGame(gameSize);
+	    else if (e.getActionCommand().equals("Solve")) {
+		puzzle.solveAndNotify();
+	    } else if (e.getActionCommand().equals("Check")) {
+		puzzle.check();
+	    } else if (e.getActionCommand().equals("Exit")) {
+		System.exit(0);
+	    } else if (e.getActionCommand().equals("Import")) {
+		int returnVal = fc.showOpenDialog(Sudoku.getFrames()[0]);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		    File selectedFile = fc.getSelectedFile();
+		    puzzle.newGame(selectedFile.getAbsolutePath());
+		    fc.setCurrentDirectory(selectedFile.getParentFile());
+		}
+	    } else if (e.getActionCommand().equals("3x3")) {
+		gameSize = 9;
+	    } else if (e.getActionCommand().equals("4x4")) {
+		gameSize = 16;
+	    } else if (e.getActionCommand().equals("5x5")) {
+		gameSize = 25;
 	    }
-	else if (e.getActionCommand().equals("Check"))
-	    System.out.println("Check game clicked");
-	else if (e.getActionCommand().equals("Exit"))
-	    System.exit(0);
-	else if (e.getActionCommand().equals("Help on"))
-	    System.out.println("Help clicked");
-	else if (e.getActionCommand().equals("3x3")) {
-	    gameSize = 9;
-	} else if (e.getActionCommand().equals("4x4")) {
-	    gameSize = 16;
-	} else if (e.getActionCommand().equals("5x5")) {
-	    gameSize = 25;
+	} catch (IOException e1) {
+	    // TODO Auto-generated catch block
+	    e1.printStackTrace();
 	}
 
     }
